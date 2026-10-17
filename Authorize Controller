@@ -1,0 +1,50 @@
+db) => _db = db;
+[Authorize(Roles = "Organiser")]
+[HttpPost]
+public async Task<IActionResult> AddResult(ResultDto dto)
+{
+    var enrol = await _db.Enrolments.Include(e => e.Event).FirstOrDefaultAsync(e => e.Id == dto.EnrolmentId);
+    if (enrol == null) return NotFound();
+
+    var userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)!.Value);
+    if (enrol.Event!.OrganiserId != userId) return Forbid();
+
+    var result = new Result
+    {
+        EnrolmentId = dto.EnrolmentId,
+        FinishTimeSeconds = dto.FinishTimeSeconds,
+        Position = dto.Position
+    };
+    _db.Results.Add(result);
+    await _db.SaveChangesAsync();
+    return CreatedAtAction(null, new { id = result.Id }, result);
+}
+
+[Authorize(Roles = "Participant")]
+[HttpGet("me")]
+public async Task<IActionResult> MyResults()
+{
+    var userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)!.Value);
+    var results = await _db.Results
+        .Include(r => r.Enrolment).ThenInclude(e => e.Event)
+        .Include(r => r.Enrolment).ThenInclude(e => e.Category)
+        .Where(r => r.Enrolment!.ParticipantId == userId)
+        .ToListAsync();
+    return Ok(results);
+}
+
+[Authorize(Roles = "Organiser")]
+[HttpGet("event/{eventId}")]
+public async Task<IActionResult> EventResults(int eventId)
+{
+    var userId = int.Parse(User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)!.Value);
+    var ev = await _db.Events.FindAsync(eventId);
+    if (ev == null) return NotFound();
+    if (ev.OrganiserId != userId) return Forbid();
+
+    var results = await _db.Results
+        .Include(r => r.Enrolment).ThenInclude(e => e.Participant)
+        .Include(r => r.Enrolment).ThenInclude(e => e.Category)
+        .Where(r => r.Enrolment!.EventId == eventId).ToListAsync();
+    return Ok(results);
+}
