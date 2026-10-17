@@ -1,0 +1,31 @@
+[Required, MaxLength(200)]
+public string Name { get; set; } = null!;
+
+public string? Description { get; set; }
+
+public DateTime Date { get; set; }
+
+public string? Location { get; set; }
+
+public double DistanceKm { get; set; }
+
+// "run", "walk", "cycle"
+[Required, MaxLength(20)]
+public string EventType { get; set; } = "run";
+
+// organiser (user who created the event)
+public int OrganiserId { get; set; }
+public User? Organiser { get; set; }
+
+public ICollection<Category> Categories { get; set; } = new List<Category>();
+public ICollection<Enrolment> Enrolments { get; set; } = new List<Enrolment>();
+}
+File: RaceDay.API.Server/Models/Category.cs using System.ComponentModel.DataAnnotations;
+namespace RaceDay.API.Server.Models;
+public class Category { public int Id { get; set; }
+[Required, MaxLength(100)]
+public string Name { get; set; } = null!; // e.g., "Under 20", "10km"
+
+public int EventId { get; set; }
+public Event? Event { get; set; }
+}
