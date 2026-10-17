@@ -18,7 +18,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RaceDay.API.AppHost")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f2cb38473a9caa736b0e33ce74dde2021fa7f5ba")]
 [assembly: System.Reflection.AssemblyProductAttribute("RaceDay.API.AppHost")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RaceDay.API.AppHost")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
