@@ -1,0 +1,1 @@
+public class ResultDto { public int EnrolmentId { get; set; } public double FinishTimeSeconds { get; set; } public int Position { get; set; } }
